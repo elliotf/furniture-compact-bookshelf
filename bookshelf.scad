@@ -118,45 +118,47 @@ module headboard_hook() {
   mount_hole_spacing = mount_bracket_height*.25*2;
   echo("HOLE SPACING: ", mount_hole_spacing);
 
-  hook_thickness = min_material_thickness*3;
+  nut_diam = 5.5;
+  nut_height = 2;
+
+  total_thickness = thickness*2;
+  hook_depth = min_material_thickness*3;
   height = mount_hole_spacing + thickness*2;
-  depth = thickness*2 + headboard_thickness + hook_thickness;
+  depth = thickness*2 + headboard_thickness + hook_depth;
 
   rounded_diam = 3;
 
   difference() {
     translate([0,-height/2,0])
-      cube([depth,height*2,thickness],center=true);
+      cube([depth,height*2,total_thickness],center=true);
 
     for(y=[-1,1]) {
       translate([-depth/2+thickness,mount_hole_spacing/2*y,0]) {
         cylinder(r=3/2,h=thickness+1,center=true,$fn=16);
+
+        translate([0,0,total_thickness/2]) {
+          cylinder(r=da6*nut_diam,h=nut_height*2,center=true,$fn=6);
+        }
       }
     }
 
-    translate([depth/2-hook_thickness-headboard_thickness/2,-height*1.5,0]) {
+    translate([depth/2-hook_depth-headboard_thickness/2,-height*1.5,0]) {
       hull() {
         translate([headboard_thickness/2-rounded_diam/2,height-rounded_diam/2,0]) {
-          cylinder(r=rounded_diam*da8,h=thickness+1,center=true,$fn=16);
+          cylinder(r=rounded_diam*da8,h=total_thickness+1,center=true,$fn=16);
 
           translate([0,-height,0]) {
-            cube([rounded_diam,rounded_diam,thickness+1],center=true);
+            cube([rounded_diam,rounded_diam,total_thickness+1],center=true);
 
             translate([-depth,0,0])
-              cube([rounded_diam,rounded_diam,thickness+1],center=true);
+              cube([rounded_diam,rounded_diam,total_thickness+1],center=true);
           }
         }
 
-        translate([-depth,height-rounded_diam/2,0]) cube([rounded_diam,rounded_diam,thickness+1],center=true);
+        translate([-depth,height-rounded_diam/2,0]) cube([rounded_diam,rounded_diam,total_thickness+1],center=true);
       }
     }
   }
-
-  /*
-  translate([-depth/2+thickness*2+headboard_thickness+hook_thickness/2,-height/2,0]) {
-    cube([hook_thickness,height*2,thickness],center=true);
-  }
-  */
 }
 
 module assembly() {
