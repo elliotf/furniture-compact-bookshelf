@@ -38,6 +38,12 @@ bearing_ziptie_spacing = 20;
 
 space_between = sqrt(2) * side_support_width;
 
+module accurate_hole(diam, height, sides=6) {
+  r = diam * 1 / cos(180 / sides) / 2;
+
+  cylinder(r=r,h=height,center=true,$fn=sides);
+}
+
 module shelf_support_side() {
   rotate([0,0,90-book_support_angle]) {
     translate([0,max_book_thickness/2,0])
@@ -134,7 +140,7 @@ module headboard_hook() {
 
     for(y=[-1,1]) {
       translate([-depth/2+thickness,mount_hole_spacing/2*y,0]) {
-        cylinder(r=3/2,h=thickness+1,center=true,$fn=16);
+        accurate_hole(3,total_thickness+1,16);
 
         translate([0,0,total_thickness/2]) {
           cylinder(r=da6*nut_diam,h=nut_height*2,center=true,$fn=6);
